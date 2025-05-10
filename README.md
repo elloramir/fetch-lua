@@ -1,4 +1,4 @@
-### Lua HTTPS Fetch
+### Fetch Lua
 
 DLL free, multi-platform HTTP client for LÖVE games
 

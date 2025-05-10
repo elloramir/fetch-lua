@@ -7,9 +7,14 @@ Works on Windows (via WinINet) and Linux (via cURL).
 
 ### Example
 ```lua
+local fetch = require("fetch")
 local code, body, headers = fetch("https://google.com")
 
 if code == 202 then
 	print("Body len: ", #body)
+end
+
+function love.update()
+	fetch.update()
 end
 ```

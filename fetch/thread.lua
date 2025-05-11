@@ -61,7 +61,7 @@ while true do
     
     -- Perform the request
     local status, body, responseHeaders = httpsRequest(host, path, port, method, headers, data)
-    local parsedHeaders = parseHeaders(responseHeaders)
+    local parsedHeaders = parseHeaders(responseHeaders or "")
     
     -- Once done, send the response back to the channel
     responseChannel:push({

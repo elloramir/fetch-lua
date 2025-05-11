@@ -84,11 +84,6 @@ local function httpsRequest(host, path, port, method, headers, data)
     method  = method or "GET"
     headers = headers or ""
 
-    -- Force HTTPS port
-    if port == 80 then
-        port = 443
-    end
-
     -- Initialize WinINet session
     local hInternet = wininet.InternetOpenA(
         "LuaJIT/WinINet Client",

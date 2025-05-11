@@ -21,9 +21,10 @@ local function pathFromURL(url)
 end
 
 local function portFromURL(url)
-    local port = url:match("^https?://[^/:]+:(%d+)") 
-              or url:match("^[^/:]+:(%d+)")
-    return tonumber(port) or 80
+    if url:sub(1, 5):lower() == "https" then
+        return 443
+    end
+    return 80
 end
 
 local function encodeHeader(headers)
@@ -53,7 +54,7 @@ while true do
     local host = hostFromURL(url)
     local path = pathFromURL(url)
     local port = portFromURL(url)
-    
+
     local method = (options.method or "GET"):upper()
     local headers = encodeHeader(options.headers)
     local data = options.data or ""

@@ -1,6 +1,6 @@
 ### Fetch Lua
 
-Only lua code, multi-platform HTTP client for LÖVE games
+Only lua code, multi-platform HTTP/HTTPS client for LÖVE games
 
 **Key Features:**
 - Cross-platform support for Windows (via WinINet) and Linux (via cURL).

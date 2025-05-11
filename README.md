@@ -16,7 +16,7 @@ local opts = { }
 
 -- default options values:
 -- opts.headers = {}
--- opts.methos = "GET"
+-- opts.method = "GET"
 -- opts.data = nil
 
 fetch("https://google.com", opts, function(res)

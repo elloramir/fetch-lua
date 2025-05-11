@@ -1,3 +1,6 @@
+-- Copyright 2025 Elloramir.
+-- All rights over the MIT license.
+
 local ffi = require("ffi")
 local wininet = ffi.load("wininet")
 
@@ -80,6 +83,11 @@ local HTTP_QUERY_RAW_HEADERS_CRLF  = 22
 local function httpsRequest(host, path, port, method, headers, data)
     method  = method or "GET"
     headers = headers or ""
+
+    -- Force HTTPS port
+    if port == 80 then
+        port = 443
+    end
 
     -- Initialize WinINet session
     local hInternet = wininet.InternetOpenA(

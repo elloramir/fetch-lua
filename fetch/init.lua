@@ -1,3 +1,6 @@
+-- Copyright 2025 Elloramir.
+-- All rights over the MIT license.
+
 local fetch = {}
 
 local cwd = (...):gsub('%.init$', '') .. "."

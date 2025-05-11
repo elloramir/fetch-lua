@@ -1,52 +1,71 @@
+-- Copyright 2025 Elloramir.
+-- All rights over the MIT license.
+
 local socket = require("socket")
 
 local function parseStatusCode(statusLine)
     return tonumber(statusLine:match("HTTP/%d+%.%d+%s(%d%d%d)"))
 end
 
-local function httpRequest(host, path, port, method, rawHeaders, data)
-    method = method or "GET"
-    data = data or ""
-    rawHeaders = rawHeaders or ""
-
-    -- Open TCP and connect
-    local tcp = assert(socket.tcp())
-    tcp:settimeout(5)
-    local ok, err = tcp:connect(host, port)
-    if not ok then
-        return nil, "Connection failed: " .. err
-    end
-
-    -- Build request
-    local req = method .. " " .. path .. " HTTP/1.1\r\n"
-              .. "Host: " .. host .. "\r\n"
-              .. rawHeaders
-              .. "Connection: close\r\n"  -- Closes the connection after the response
-              .. "Content-Length: " .. #data .. "\r\n"
-              .. "\r\n" .. data
-    tcp:send(req)
-
-    -- Read status line
-    local statusLine = assert(tcp:receive("*l"))
-
-    -- Read headers
-    local responseHeaders = {}
+local function extractHeaders(con)
+    local headers = ""
     while true do
-        local line = tcp:receive("*l")
+        local line = con:receive("*l")
         if not line or line == "" then break end
-        local k, v = line:match("^([^:]+):%s*(.+)$")
-        if k and v then responseHeaders[k] = v end
+        headers = headers .. line .. "\n"
     end
+    return headers
+end
 
-    -- Read body based on Content-Length
-    local len = tonumber(responseHeaders["Content-Length"]) or 0
+local function extractContent(con, headers)
+    local len = tonumber(headers["Content-Length"]) or 0
     local body = ""
     if len > 0 then
-        body = assert(tcp:receive(len))
+        body = assert(con:receive(len))
     end
-    tcp:close()
+    return body
+end
 
-    return statusLine, body, responseHeaders
+local function extractCode(con)
+    local line = assert(con:receive("*l"))
+    local code = tonumber(line:match("(%d%d%d)"))
+
+    return code
+end
+
+local function httpRequest(host, path, port, method, headers, data)
+    method = method or "GET"
+    data = data or ""
+    headers = headers or ""
+
+    local req
+    local con = assert(socket.tcp());con:settimeout(5)
+    local ok, err = con:connect(host, port)
+
+    if not ok then
+        return nil, err, nil
+    end
+
+    req = method .. " " .. path .. " HTTP/1.1\r\n"
+    req = req .. "Host: " .. host .. "\r\n"
+    req = req .. headers
+    req = req .. "Connection: close\r\n"
+    req = req .. "Content-Length: " .. #data .. "\r\n"
+    req = req .. "\r\n" .. data
+
+    ok, err = con:send(req)
+
+    if not ok then
+        return nil, err, nil
+    end
+
+    local code = extractCode(con)
+    local responseHeaders = extractHeaders(con)
+    local body = extractContent(con, responseHeaders)
+
+    con:close()
+
+    return code, body, responseHeaders
 end
 
 return httpRequest

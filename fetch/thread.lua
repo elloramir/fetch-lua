@@ -1,3 +1,6 @@
+-- Copyright 2025 Elloramir.
+-- All rights over the MIT license.
+
 local cwd = ...
 local sys = require("love.system")
 local options = { ["Windows"] = "wininet", ["Linux"] = "curl" }
@@ -32,6 +35,15 @@ local function encodeHeader(headers)
     return headerStr
 end
 
+local function parseHeaders(rawHeaders)
+    local headers = { }
+    for line in rawHeaders:gmatch("([^\n]+)\n") do
+        local k, v = line:match("^([^:]+):%s*(.+)$")
+        if k and v then headers[k] = v end
+    end
+    return headers
+end
+
 while true do
     local message = requestChannel:demand()
     local url = message.address
@@ -48,6 +60,7 @@ while true do
     
     -- Perform the request
     local status, body, responseHeaders = httpsRequest(host, path, port, method, headers, data)
+    local parsedHeaders = parseHeaders(responseHeaders)
     
     -- Once done, send the response back to the channel
     responseChannel:push({
@@ -55,6 +68,6 @@ while true do
         code = status,
         body = body,
         adapter = adapter,
-        headers = responseHeaders
+        headers = parsedHeaders,
     })
 end

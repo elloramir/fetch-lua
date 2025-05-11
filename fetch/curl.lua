@@ -10,3 +10,5 @@ CURLcode curl_easy_setopt(CURL handle, int option, ...);
 CURLcode curl_easy_perform(CURL handle);
 CURLcode curl_easy_cleanup(CURL handle);
 ]]
+
+error("Not implemented yet!")

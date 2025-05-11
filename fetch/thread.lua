@@ -1,7 +1,8 @@
 local cwd = ...
 local sys = require("love.system")
-local adapter = { ["Windows"] = "winnet", ["Linux"] = "curl", } 
-local httpsRequest = require(cwd .. adapter [ sys.getOS() ])
+local options = { ["Windows"] = "wininet", ["Linux"] = "curl" }
+local adapter = (options[sys.getOS()] or "socket")
+local httpsRequest = require(cwd .. adapter)
 
 local requestChannel = love.thread.getChannel("fetch_request")
 local responseChannel = love.thread.getChannel("fetch_response")
@@ -14,6 +15,12 @@ end
 local function pathFromURL(url)
     local path = url:match("^https?://[^/]+(/.*)$") or "/"
     return path
+end
+
+local function portFromURL(url)
+    local port = url:match("^https?://[^/:]+:(%d+)") 
+              or url:match("^[^/:]+:(%d+)")
+    return tonumber(port) or 80
 end
 
 local function encodeHeader(headers)
@@ -33,19 +40,21 @@ while true do
     -- Extract host and path from the URL
     local host = hostFromURL(url)
     local path = pathFromURL(url)
+    local port = portFromURL(url)
     
     local method = (options.method or "GET"):upper()
     local headers = encodeHeader(options.headers)
     local data = options.data or ""
     
     -- Perform the request
-    local status, body, responseHeaders = httpsRequest(host, path, method, headers, data)
+    local status, body, responseHeaders = httpsRequest(host, path, port, method, headers, data)
     
     -- Once done, send the response back to the channel
     responseChannel:push({
         id = message.id,
         code = status,
         body = body,
+        adapter = adapter,
         headers = responseHeaders
     })
 end

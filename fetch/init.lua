@@ -1,6 +1,6 @@
 local fetch = {}
 
-local cwd = (...):gsub('%.thread$', '') .. "."
+local cwd = (...):gsub('%.init$', '') .. "."
 local path = cwd:gsub("[.]", "/")
 local requestChannel = love.thread.getChannel("fetch_request")
 local responseChannel = love.thread.getChannel("fetch_response")

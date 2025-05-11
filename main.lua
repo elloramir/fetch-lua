@@ -3,7 +3,7 @@
 
 local fetch = require("fetch")
 
-fetch("https://google.com", nil, function(res)
+fetch("https://example.com", nil, function(res)
     print("Request done with status code:", res.code)
     print("Body Length:", #res.body, "bytes")
     print("Adapter:", res.adapter)

@@ -1,13 +1,12 @@
 ### Fetch Lua
 
-Only lua code, multi-platform HTTP/HTTPS client for LÖVE games
+ Lua only, multi-platform HTTP/HTTPS client for LÖVE games
 
 **Key Features:**
 - Cross-platform support for Windows (via WinINet) and Linux (via cURL).
 - Fallback to LuaSocket for HTTP requests on other platforms (e.g., macOS).
 - Easy integration with LÖVE games without the need for additional dependencies.
 - Non-blocking HTTP requests to avoid blocking the game loop.
-- Handles image fetching and display, with retries on error.
 
 ### Example
 ```lua

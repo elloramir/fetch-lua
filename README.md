@@ -8,7 +8,10 @@ Works on Windows (via WinINet) and Linux (via cURL).
 ### Example
 ```lua
 local fetch = require("fetch")
-local code, body, headers = fetch("https://google.com")
+
+fetch("https://google.com", nil, function(res)
+	print(res.status)
+end)
 
 if code == 202 then
 	print("Body len: ", #body)

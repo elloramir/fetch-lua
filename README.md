@@ -1,9 +1,6 @@
 ### Fetch Lua
 
-DLL free, multi-platform HTTP client for LÖVE games
-
-Perform HTTPS requests directly from your game without external code (other than Lua).  
-Works on Windows (via WinINet) and Linux (via cURL). Includes a fallback to LuaSocket for HTTP requests if not on Windows or Linux.
+Only lua code, multi-platform HTTP client for LÖVE games
 
 **Key Features:**
 - Cross-platform support for Windows (via WinINet) and Linux (via cURL).
@@ -15,9 +12,18 @@ Works on Windows (via WinINet) and Linux (via cURL). Includes a fallback to LuaS
 ### Example
 ```lua
 local fetch = require("fetch")
+local opts = { }
 
-fetch("https://google.com", nil, function(res)
-    print(res.status)
+-- default options values:
+-- opts.headers = {}
+-- opts.methos = "GET"
+-- opts.data = nil
+
+fetch("https://google.com", opts, function(res)
+    print(res.code) -- status number
+    print(res.headers) -- table key/value
+    print(res.body) -- raw string with the respose
+    print(res.adapter) -- how the request was made
 end)
 
 function love.update()

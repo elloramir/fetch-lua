@@ -3,10 +3,6 @@
 
 local socket = require("socket")
 
-local function parseStatusCode(statusLine)
-    return tonumber(statusLine:match("HTTP/%d+%.%d+%s(%d%d%d)"))
-end
-
 local function extractHeaders(con)
     local headers = ""
     while true do

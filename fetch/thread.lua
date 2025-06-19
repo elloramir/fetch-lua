@@ -58,7 +58,7 @@ while true do
     local method = (options.method or "GET"):upper()
     local headers = encodeHeader(options.headers)
     local data = options.data or ""
-    
+
     -- Perform the request
     local status, body, responseHeaders = httpsRequest(host, path, port, method, headers, data)
     local parsedHeaders = parseHeaders(responseHeaders or "")

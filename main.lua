@@ -21,12 +21,14 @@ local app = {
 }
 
 local endpoints = {
-    {name = "GitHub Zen",   url = "https://api.github.com/zen",               color = {1,0.4,0},    radius = 40},
-    {name = "Placeholder",  url = "https://jsonplaceholder.typicode.com/posts/1", color = {0.2,0.8,0.4}, radius = 35},
-    {name = "HTTPBin",      url = "https://httpbin.org/json",                 color = {0.6,0.2,1},   radius = 45},
-    {name = "ReqBin Echo",  url = "https://reqbin.com/echo/get/json",         color = {1,0.8,0.2},  radius = 30},
-    {name = "GitHub User",  url = "https://api.github.com/users/octocat",     color = {0.8,0.2,0.6}, radius = 38},
+    {name = "Cat Fact",      url = "https://catfact.ninja/fact",                  color = {1,0.4,0},    radius = 40},
+    {name = "Placeholder",   url = "https://jsonplaceholder.typicode.com/posts/1", color = {0.2,0.8,0.4}, radius = 35},
+    {name = "HTTPBin",       url = "https://httpbin.org/json",                   color = {0.6,0.2,1},   radius = 45},
+    {name = "ReqBin Echo",   url = "https://reqbin.com/echo/get/json",           color = {1,0.8,0.2},   radius = 30},
+    {name = "Dog API",       url = "https://dog.ceo/api/breeds/image/random",    color = {0.8,0.2,0.6}, radius = 38},
 }
+
+
 
 function love.load()
     love.window.setTitle("Fetch HTTP Demo")
@@ -155,7 +157,7 @@ function love.update(dt)
     app.time = app.time + dt
     if app.auto_mode then
         app.auto_timer = app.auto_timer + dt
-        if app.auto_timer>0.5 then sendRequest(app.servers[math.random(#app.servers)]) app.auto_timer=0 end
+        if app.auto_timer>0.1 then sendRequest(app.servers[math.random(#app.servers)]) app.auto_timer=0 end
     end
     for _,s in ipairs(app.servers) do if s.status~="requesting" then s.status="idle" end end
 end
